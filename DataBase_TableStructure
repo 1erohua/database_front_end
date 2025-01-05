@@ -1,0 +1,259 @@
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
+--
+-- Host: 127.0.0.1    Database: BandDatabase
+-- ------------------------------------------------------
+-- Server version	8.0.40-0ubuntu0.22.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `Albums`
+--
+
+DROP TABLE IF EXISTS `Albums`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Albums` (
+  `AlbumID` int NOT NULL AUTO_INCREMENT,
+  `AlbumName` varchar(50) NOT NULL,
+  `ReleaseDate` date NOT NULL,
+  `AlbumDescription` text,
+  `BandID` int DEFAULT NULL,
+  `AlbumCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`AlbumID`),
+  UNIQUE KEY `AlbumCode` (`AlbumCode`),
+  KEY `BandID` (`BandID`),
+  CONSTRAINT `Albums_ibfk_1` FOREIGN KEY (`BandID`) REFERENCES `Bands` (`BandID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `BandMembers`
+--
+
+DROP TABLE IF EXISTS `BandMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BandMembers` (
+  `MemberID` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  `Gender` enum('Male','Female') NOT NULL,
+  `Age` int DEFAULT NULL,
+  `Role` varchar(50) NOT NULL,
+  `JoinDate` date NOT NULL,
+  `LeaveDate` date DEFAULT NULL,
+  `BandID` int DEFAULT NULL,
+  `MemberCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`MemberID`),
+  UNIQUE KEY `MemberCode` (`MemberCode`),
+  KEY `BandID` (`BandID`),
+  CONSTRAINT `BandMembers_ibfk_1` FOREIGN KEY (`BandID`) REFERENCES `Bands` (`BandID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Bands`
+--
+
+DROP TABLE IF EXISTS `Bands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Bands` (
+  `BandID` int NOT NULL AUTO_INCREMENT,
+  `BandName` varchar(50) NOT NULL,
+  `FormationDate` date NOT NULL,
+  `BandDescription` text,
+  `LeaderID` int DEFAULT NULL,
+  `BandCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`BandID`),
+  UNIQUE KEY `BandCode` (`BandCode`),
+  KEY `LeaderID` (`LeaderID`),
+  CONSTRAINT `Bands_ibfk_1` FOREIGN KEY (`LeaderID`) REFERENCES `BandMembers` (`MemberID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Concerts`
+--
+
+DROP TABLE IF EXISTS `Concerts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Concerts` (
+  `ConcertID` int NOT NULL AUTO_INCREMENT,
+  `ConcertName` varchar(50) NOT NULL,
+  `ConcertDate` date NOT NULL,
+  `Location` varchar(50) NOT NULL,
+  `BandID` int DEFAULT NULL,
+  `ConcertCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`ConcertID`),
+  UNIQUE KEY `ConcertCode` (`ConcertCode`),
+  KEY `BandID` (`BandID`),
+  CONSTRAINT `Concerts_ibfk_1` FOREIGN KEY (`BandID`) REFERENCES `Bands` (`BandID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FanAttendsConcerts`
+--
+
+DROP TABLE IF EXISTS `FanAttendsConcerts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `FanAttendsConcerts` (
+  `FanID` int NOT NULL,
+  `ConcertID` int NOT NULL,
+  `FanCode` varchar(20) DEFAULT NULL,
+  `ConcertCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`FanID`,`ConcertID`),
+  KEY `ConcertID` (`ConcertID`),
+  CONSTRAINT `FanAttendsConcerts_ibfk_1` FOREIGN KEY (`FanID`) REFERENCES `Fans` (`FanID`),
+  CONSTRAINT `FanAttendsConcerts_ibfk_2` FOREIGN KEY (`ConcertID`) REFERENCES `Concerts` (`ConcertID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FanLikesAlbums`
+--
+
+DROP TABLE IF EXISTS `FanLikesAlbums`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `FanLikesAlbums` (
+  `FanID` int NOT NULL,
+  `AlbumID` int NOT NULL,
+  `FanCode` varchar(20) DEFAULT NULL,
+  `AlbumCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`FanID`,`AlbumID`),
+  KEY `AlbumID` (`AlbumID`),
+  CONSTRAINT `FanLikesAlbums_ibfk_1` FOREIGN KEY (`FanID`) REFERENCES `Fans` (`FanID`),
+  CONSTRAINT `FanLikesAlbums_ibfk_2` FOREIGN KEY (`AlbumID`) REFERENCES `Albums` (`AlbumID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FanLikesBands`
+--
+
+DROP TABLE IF EXISTS `FanLikesBands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `FanLikesBands` (
+  `FanID` int NOT NULL,
+  `BandID` int NOT NULL,
+  `FanCode` varchar(20) DEFAULT NULL,
+  `BandCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`FanID`,`BandID`),
+  KEY `BandID` (`BandID`),
+  CONSTRAINT `FanLikesBands_ibfk_1` FOREIGN KEY (`FanID`) REFERENCES `Fans` (`FanID`),
+  CONSTRAINT `FanLikesBands_ibfk_2` FOREIGN KEY (`BandID`) REFERENCES `Bands` (`BandID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FanLikesSongs`
+--
+
+DROP TABLE IF EXISTS `FanLikesSongs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `FanLikesSongs` (
+  `FanID` int NOT NULL,
+  `SongID` int NOT NULL,
+  `FanCode` varchar(20) DEFAULT NULL,
+  `AlbumCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`FanID`,`SongID`),
+  KEY `SongID` (`SongID`),
+  CONSTRAINT `FanLikesSongs_ibfk_1` FOREIGN KEY (`FanID`) REFERENCES `Fans` (`FanID`),
+  CONSTRAINT `FanLikesSongs_ibfk_2` FOREIGN KEY (`SongID`) REFERENCES `Songs` (`SongID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Fans`
+--
+
+DROP TABLE IF EXISTS `Fans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Fans` (
+  `FanID` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  `Gender` enum('Male','Female') NOT NULL,
+  `Age` int DEFAULT NULL,
+  `Occupation` varchar(50) DEFAULT NULL,
+  `Education` varchar(50) DEFAULT NULL,
+  `FanCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`FanID`),
+  UNIQUE KEY `FanCode` (`FanCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `MusicReviews`
+--
+
+DROP TABLE IF EXISTS `MusicReviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MusicReviews` (
+  `ReviewID` int NOT NULL AUTO_INCREMENT,
+  `AlbumID` int DEFAULT NULL,
+  `FanID` int DEFAULT NULL,
+  `Comment` text,
+  `Rating` decimal(3,2) DEFAULT NULL,
+  `ReviewDate` date NOT NULL,
+  `ReviewCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`ReviewID`),
+  UNIQUE KEY `AlbumID` (`AlbumID`,`FanID`),
+  UNIQUE KEY `ReviewCode` (`ReviewCode`),
+  KEY `FanID` (`FanID`),
+  CONSTRAINT `MusicReviews_ibfk_1` FOREIGN KEY (`AlbumID`) REFERENCES `Albums` (`AlbumID`),
+  CONSTRAINT `MusicReviews_ibfk_2` FOREIGN KEY (`FanID`) REFERENCES `Fans` (`FanID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Songs`
+--
+
+DROP TABLE IF EXISTS `Songs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Songs` (
+  `SongID` int NOT NULL AUTO_INCREMENT,
+  `SongName` varchar(50) NOT NULL,
+  `Lyricist` varchar(50) DEFAULT NULL,
+  `Composer` varchar(50) DEFAULT NULL,
+  `AlbumID` int DEFAULT NULL,
+  `SongCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`SongID`),
+  UNIQUE KEY `SongCode` (`SongCode`),
+  KEY `AlbumID` (`AlbumID`),
+  CONSTRAINT `Songs_ibfk_1` FOREIGN KEY (`AlbumID`) REFERENCES `Albums` (`AlbumID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping routines for database 'BandDatabase'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-01-04 13:28:40
