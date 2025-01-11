@@ -13,8 +13,10 @@
         <el-form-item label="发布日期">
           <el-date-picker
             v-model="albumInfo.ReleaseDate"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="专辑描述">
@@ -35,6 +37,7 @@
 
 <script>
 import { updateBandAlbum, createBandAlbum } from "@/api/request";
+import moment from "moment";
 
 export default {
   name: "AlbumDialog",

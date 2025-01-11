@@ -5,7 +5,7 @@ import axios from "axios";
 
 export function request(config) {
   const instanse = axios.create({
-    baseURL: "http://localhost:3000/",
+    baseURL: "http://10.201.46.5:8080/",
     timeout: 1000,
   });
 
@@ -380,6 +380,16 @@ export function getSongFans(bandId) {
   });
 }// 需要返回Fan表信息，需要与FanLikesSongs、Album、Song表联立
 
+
+// 获取参与了本乐队演唱会的粉丝信息
+export function getConcertAttendees(bandId) {
+  return request({
+    url: `/band/${bandId}/concerts/attendees`,
+    method: 'get',
+  });
+}// 需要返回Fan表信息，需要与FanAttendsConcert表、Concert表联立
+
+
 // 获取本乐队专辑的乐评
 export function getBandAlbumReviews(bandId) {
   return request({
@@ -537,7 +547,7 @@ export function getUnattendedConcerts(fanId) {
   });
 }// 返回Concert表，认为未参加等同于没有Attend的，即不在FanAttendConcert里面出现的Concert，都认为是未参加
 
-// 给专辑评论
+// 给专辑评论评分
 export function addAlbumReview(fanId, albumId, data) {
   return request({
     url: `/fan/${fanId}/albums/${albumId}/reviews`,
@@ -546,14 +556,6 @@ export function addAlbumReview(fanId, albumId, data) {
   });
 }
 
-// 给专辑评分
-export function rateAlbum(fanId, albumId, data) {
-  return request({
-    url: `/fan/${fanId}/albums/${albumId}/rating`,
-    method: "post",
-    data,
-  });
-}
 
 // 注意，向服务器申请的信息，得到的都是json格式文件！！！
 // 注意，向服务器申请的信息，得到的都是json格式文件！！！
@@ -615,5 +617,23 @@ export function updateLikedSong(fanId, songId, data) {
     url: `/fan/${fanId}/liked-songs/${songId}`,
     method: "put",
     data,
+  });
+}
+
+// 获取当前歌迷的评论
+export function getFanReviews(fanId) {
+  return request({
+    url: `/fan/${fanId}/reviews`,
+    method: 'get',
+
+  });
+}
+
+
+// 删除专辑评论
+export function deleteAlbumReview(fanId,reviewId) {
+  return request({
+    url: `/fan/${fanId}/reviews/${reviewId}`,
+    method: "delete",
   });
 }

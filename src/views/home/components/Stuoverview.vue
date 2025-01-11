@@ -1,6 +1,6 @@
 <template>
   <div class="stu-overview container_wrap">
-    <div class="header">全部学生信息概况</div>
+    <div v-if="false" class="header">全部学生信息概况</div>
     <div class="stu-container">
       <div class="stu-item" v-for="(item,index) in overviewCounts" :key="index">
         <div class="item-title">{{item.name}}</div>

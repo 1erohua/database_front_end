@@ -12,6 +12,9 @@
         <el-table-column prop="BandName" label="乐队名称" width="150">
         </el-table-column>
         <el-table-column prop="FormationDate" label="成立日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.FormationDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="BandDescription" label="乐队描述" width="200">
         </el-table-column>
@@ -33,6 +36,9 @@
         <el-table-column prop="AlbumName" label="专辑名称" width="150">
         </el-table-column>
         <el-table-column prop="ReleaseDate" label="发行日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.ReleaseDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="AlbumDescription" label="专辑描述" width="200">
         </el-table-column>
@@ -75,6 +81,9 @@
         <el-table-column prop="ConcertName" label="演唱会名称" width="150">
         </el-table-column>
         <el-table-column prop="ConcertDate" label="演唱会日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.ConcertDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="Location" label="地点" width="150">
         </el-table-column>
@@ -105,6 +114,7 @@ import {
   addLikedSong,
   addAttendedConcert,
 } from "@/api/request";
+import moment from "moment"; // 引入 moment.js
 
 export default {
   name: "FanHeLikes",
@@ -181,6 +191,10 @@ export default {
       }
       target.blur();
     },
+    // 格式化日期
+    formatDate(date) {
+      return date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+    }
   },
 };
 </script>

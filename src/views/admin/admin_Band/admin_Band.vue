@@ -31,6 +31,9 @@
         <el-table-column prop="BandName" label="乐队名称" width="150">
         </el-table-column>
         <el-table-column prop="FormationDate" label="成立日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.FormationDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="BandDescription" label="乐队描述" width="200">
         </el-table-column>
@@ -79,6 +82,7 @@
 import { getAllBands, deleteBand } from "@/api/request";
 import Pagination from "@/components/pagination";
 import Dialog from "./Dialog.vue";
+import moment from "moment";
 
 export default {
   name: "AdminDetail",
@@ -113,7 +117,7 @@ export default {
     },
     // 修改乐队信息
     handleEdit(index, row) {
-      this.bandInfo = row;
+      this.bandInfo = { ...row, FormationDate: moment(row.FormationDate).format('YYYY-MM-DD HH:mm:ss') };
       this.dialogEditVisible.value = true;
     },
     // 删除乐队信息
@@ -167,7 +171,7 @@ export default {
     // 新增乐队
     newAdd(event) {
       this.lostBlur(event);
-      this.bandInfo = {}; // 清空表单
+      this.bandInfo = { FormationDate: moment().format('YYYY-MM-DD HH:mm:ss') }; // 清空表单并设置默认日期
       this.dialogEditVisible.value = true;
     },
     // 刷新乐队表
@@ -191,6 +195,10 @@ export default {
     updateBand(data) {
       this.getBandMes();
     },
+    // 格式化日期
+    formatDate(date) {
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    }
   },
 };
 </script>

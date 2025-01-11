@@ -55,44 +55,99 @@ export default {
       },
     },
   },
+  // methods: {
+  //   childClose() {
+  //     this.dialogEditVisible.value = false;
+  //   },
+  //   // 提交表单
+  //   submitForm(formName) {
+  //     this.$refs[formName].validate((valid) => {
+  //       if (valid) {
+  //         if (this.concertInfo.ConcertID) {
+  //           // 更新演唱会信息
+  //           updateConcert(this.concertInfo.ConcertID, this.concertInfo)
+  //             .then(() => {
+  //               this.$message({ message: "更新成功", type: "success" });
+  //               this.$emit("updateConcert", this.concertInfo);
+  //               this.childClose();
+  //             })
+  //             .catch((err) => {
+  //               this.$message.error("更新失败!");
+  //             });
+  //         } else {
+  //           // 新增演唱会
+  //           addConcert(this.concertInfo)
+  //             .then(() => {
+  //               this.$message({ message: "新增成功", type: "success" });
+  //               this.$emit("updateConcert", this.concertInfo);
+  //               this.childClose();
+  //             })
+  //             .catch((err) => {
+  //               this.$message.error("新增失败!");
+  //             });
+  //         }
+  //       } else {
+  //         console.log("error submit!!");
+  //         return false;
+  //       }
+  //     });
+  //   },
+  // },
+
+
+
   methods: {
-    childClose() {
-      this.dialogEditVisible.value = false;
-    },
-    // 提交表单
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          if (this.concertInfo.ConcertID) {
-            // 更新演唱会信息
-            updateConcert(this.concertInfo.ConcertID, this.concertInfo)
-              .then(() => {
-                this.$message({ message: "更新成功", type: "success" });
-                this.$emit("updateConcert", this.concertInfo);
-                this.childClose();
-              })
-              .catch((err) => {
-                this.$message.error("更新失败!");
-              });
-          } else {
-            // 新增演唱会
-            addConcert(this.concertInfo)
-              .then(() => {
-                this.$message({ message: "新增成功", type: "success" });
-                this.$emit("updateConcert", this.concertInfo);
-                this.childClose();
-              })
-              .catch((err) => {
-                this.$message.error("新增失败!");
-              });
-          }
+  // 提交表单
+  submitForm(formName) {
+    this.$refs[formName].validate((valid) => {
+      if (valid) {
+        const concertData = { ...this.concertInfo };
+        // 格式化日期为 MySQL 可接受的格式
+        concertData.ConcertDate = this.formatDateForMySQL(concertData.ConcertDate);
+
+        if (concertData.ConcertID) {
+          // 更新演唱会信息
+          updateConcert(concertData.ConcertID, concertData)
+            .then(() => {
+              this.$message({ message: "更新成功", type: "success" });
+              this.$emit("updateConcert", concertData);
+              this.childClose();
+            })
+            .catch((err) => {
+              this.$message.error(err);
+            });
         } else {
-          console.log("error submit!!");
-          return false;
+          // 新增演唱会
+          addConcert(concertData)
+            .then(() => {
+              this.$message({ message: "新增成功", type: "success" });
+              this.$emit("updateConcert", concertData);
+              this.childClose();
+            })
+            .catch((err) => {
+              this.$message.error(err);
+            });
         }
-      });
-    },
+      } else {
+        console.log("error submit!!");
+        return false;
+      }
+    });
   },
+
+  // 格式化日期为 MySQL 可接受的格式
+  formatDateForMySQL(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().slice(0, 19).replace('T', ' ');
+  },
+}
+
+
+
+
+
+
 };
 </script>
 

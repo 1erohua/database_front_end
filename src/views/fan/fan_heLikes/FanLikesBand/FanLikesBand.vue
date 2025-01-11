@@ -33,6 +33,9 @@
         <el-table-column prop="BandName" label="乐队名称" width="150">
         </el-table-column>
         <el-table-column prop="FormationDate" label="成立日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.FormationDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="BandDescription" label="乐队描述" width="200">
         </el-table-column>
@@ -43,7 +46,7 @@
 
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
+            <el-button v-if="false"
               size="mini"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
@@ -81,6 +84,7 @@
 import { getFanLikedBands, addLikedBand, removeLikedBand } from "@/api/request";
 import Pagination from "@/components/pagination";
 import Dialog from "./Dialog.vue";
+import moment from "moment"; // 引入 moment.js
 
 export default {
   name: "FanLikesBand",
@@ -116,7 +120,10 @@ export default {
     },
     // 修改喜欢的乐队信息
     handleEdit(index, row) {
-      this.bandInfo = row;
+      this.bandInfo = {
+        ...row,
+        FormationDate: moment(row.FormationDate).format('YYYY-MM-DD HH:mm:ss') // 格式化日期
+      };
       this.dialogEditVisible.value = true;
     },
     // 删除喜欢的乐队信息
@@ -170,7 +177,9 @@ export default {
     // 新增喜欢的乐队
     newAdd(event) {
       this.lostBlur(event);
-      this.bandInfo = {}; // 清空表单
+      this.bandInfo = {
+        FormationDate: moment().format('YYYY-MM-DD HH:mm:ss') // 设置默认日期
+      }; // 清空表单
       this.dialogEditVisible.value = true;
     },
     // 刷新喜欢的乐队表
@@ -194,6 +203,10 @@ export default {
     updateBand(data) {
       this.getFanLikedBandsMes();
     },
+    // 格式化日期
+    formatDate(date) {
+      return date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+    }
   },
 };
 </script>

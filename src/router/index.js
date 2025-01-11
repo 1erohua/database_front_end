@@ -105,7 +105,7 @@ const routes = [
     children: [
       {
         path: "/band/music_review",
-        name: "_FanLikesBands",
+        name: "FanLikes_",
         bgimgurl: "~@/assets/images/孤独摇滚.png",
         meta: { title: "专辑乐评", icon: "iconfont icon-yonghu" },
         component: () => import("../views/band/band_MusicReview/BandMusicReview.vue"),

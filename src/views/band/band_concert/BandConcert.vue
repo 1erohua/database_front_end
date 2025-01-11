@@ -31,6 +31,9 @@
         <el-table-column prop="ConcertName" label="演唱会名称" width="150">
         </el-table-column>
         <el-table-column prop="ConcertDate" label="演唱会日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.ConcertDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="Location" label="地点" width="200">
         </el-table-column>
@@ -76,9 +79,10 @@
 </template>
 
 <script>
-import { getBandConcerts, createBandConcert, updateBandConcert, deleteBandConcert } from "@/api/request";
+import { getBandConcerts, deleteBandConcert } from "@/api/request";
 import Pagination from "@/components/pagination";
 import ConcertDialog from "./Dialog.vue";
+import moment from "moment";
 
 export default {
   name: "BandConcert",
@@ -114,7 +118,10 @@ export default {
     },
     // 修改演唱会信息
     handleEdit(index, row) {
-      this.concertInfo = row;
+      this.concertInfo = { 
+        ...row, 
+        ConcertDate: moment(row.ConcertDate).format('YYYY-MM-DD HH:mm:ss') 
+      };
       this.dialogEditVisible.value = true;
     },
     // 删除演唱会信息
@@ -170,7 +177,9 @@ export default {
     // 新增演唱会
     newAdd(event) {
       this.lostBlur(event);
-      this.concertInfo = {}; // 清空表单
+      this.concertInfo = { 
+        ConcertDate: moment().format('YYYY-MM-DD HH:mm:ss') 
+      }; // 清空表单并设置默认日期
       this.dialogEditVisible.value = true;
     },
     // 刷新演唱会表
@@ -194,6 +203,10 @@ export default {
     updateConcert(data) {
       this.getConcertMes();
     },
+    // 格式化日期
+    formatDate(date) {
+      return date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+    }
   },
 };
 </script>

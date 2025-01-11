@@ -100,22 +100,69 @@ export default {
     };
   },
   methods: {
-    // 获取演唱会信息
-    getConcertMes() {
-      getAllConcerts().then((res) => {
-        this.tableData = res.data;
-        this.pagiDataAll = Math.ceil(res.data.length / 10); // 假设每页显示10条数据
+    // // 获取演唱会信息
+    // getConcertMes() {
+    //   getAllConcerts().then((res) => {
+    //     this.tableData = res.data;
+    //     this.pagiDataAll = Math.ceil(res.data.length / 10); // 假设每页显示10条数据
+    //   });
+    // },
+
+  // 获取演唱会信息
+  getConcertMes() {
+    getAllConcerts().then((res) => {
+      this.tableData = res.data.map(concert => {
+        // 将日期格式化为前端显示的格式
+        concert.ConcertDate = this.formatDateForDisplay(concert.ConcertDate);
+        return concert;
       });
-    },
+      this.pagiDataAll = Math.ceil(res.data.length / 10); // 假设每页显示10条数据
+    });
+  },
+
+  // 格式化日期为前端显示的格式
+  formatDateForDisplay(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleString(); // 或者使用其他你想要的格式
+  },
+
+  // 格式化日期为 MySQL 可接受的格式
+  formatDateForMySQL(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().slice(0, 19).replace('T', ' ');
+  },
+
+
+
+
+
+
+
+
+
     // 分页跳转
     currentChange(item) {
       this.getConcertMes(item - 1);
     },
-    // 修改演唱会信息
-    handleEdit(index, row) {
-      this.concertInfo = row;
-      this.dialogEditVisible.value = true;
-    },
+
+
+    // // 修改演唱会信息
+    // handleEdit(index, row) {
+    //   this.concertInfo = row;
+    //   this.dialogEditVisible.value = true;
+    // },
+
+  // 修改演唱会信息
+  handleEdit(index, row) {
+    this.concertInfo = { ...row };
+    this.concertInfo.ConcertDate = this.formatDateForMySQL(row.ConcertDate); // 转换为 MySQL 格式
+    this.dialogEditVisible.value = true;
+  },
+
+
+    
     // 删除演唱会信息
     handleDelete(index, row) {
       this.$confirm("确认删除？")

@@ -13,8 +13,10 @@
         <el-form-item label="演唱会日期">
           <el-date-picker
             v-model="concertInfo.ConcertDate"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="地点">
@@ -35,6 +37,7 @@
 
 <script>
 import { createBandConcert, updateBandConcert } from "@/api/request";
+import moment from "moment";
 
 export default {
   name: "ConcertDialog",

@@ -37,7 +37,8 @@ router.beforeEach((to, from, next) => {
       } else {
         try {
           // 如果没有获取用户信息，尝试获取用户信息
-          store.dispatch('getInfo1')
+          store.dispatch('getInfo')
+          console.log("此处不应该执行")
 
           next() // 获取用户信息后继续导航
         } catch (error) {

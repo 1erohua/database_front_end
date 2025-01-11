@@ -1,9 +1,10 @@
 module.exports = {
-    devServer: {
-    host: "0.0.0.0",
-    port: 1888,
-    https: false,
-    disableHostCheck: true,
-    open: false, // 配置自动启动浏览器
-}
-}
+  devServer: {
+    proxy: {
+      "/": {
+        target: "http://10.201.46.5:8080", // 后端服务地址
+        changeOrigin: true,
+      },
+    },
+  },
+};

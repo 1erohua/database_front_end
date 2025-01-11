@@ -31,6 +31,9 @@
         <el-table-column prop="AlbumName" label="专辑名称" width="150">
         </el-table-column>
         <el-table-column prop="ReleaseDate" label="发布日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.ReleaseDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="AlbumDescription" label="专辑描述" width="200">
         </el-table-column>
@@ -79,6 +82,7 @@
 import { getBandAlbums, deleteBandAlbum } from "@/api/request";
 import Pagination from "@/components/pagination";
 import Dialog from "./Dialog.vue";
+import moment from "moment";
 
 export default {
   name: "BandAlbum",
@@ -114,7 +118,10 @@ export default {
     },
     // 修改专辑信息
     handleEdit(index, row) {
-      this.albumInfo = row;
+      this.albumInfo = { 
+        ...row, 
+        ReleaseDate: moment(row.ReleaseDate).format('YYYY-MM-DD HH:mm:ss') 
+      };
       this.dialogEditVisible.value = true;
     },
     // 删除专辑信息
@@ -170,7 +177,9 @@ export default {
     // 新增专辑
     newAdd(event) {
       this.lostBlur(event);
-      this.albumInfo = {}; // 清空表单
+      this.albumInfo = { 
+        ReleaseDate: moment().format('YYYY-MM-DD HH:mm:ss') 
+      }; // 清空表单并设置默认日期
       this.dialogEditVisible.value = true;
     },
     // 刷新专辑表
@@ -194,6 +203,10 @@ export default {
     updateAlbum(data) {
       this.getAlbumMes();
     },
+    // 格式化日期
+    formatDate(date) {
+      return date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+    }
   },
 };
 </script>

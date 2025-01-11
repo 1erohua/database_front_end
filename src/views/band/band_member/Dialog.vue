@@ -25,15 +25,19 @@
         <el-form-item label="加入日期">
           <el-date-picker
             v-model="memberInfo.JoinDate"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="离开日期">
+        <el-form-item v-if="false" label="离开日期">
           <el-date-picker
             v-model="memberInfo.LeaveDate"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="成员代码">
@@ -51,6 +55,7 @@
 
 <script>
 import { updateBandMember, addBandMember } from "@/api/request";
+import moment from "moment";
 
 export default {
   name: "MemberDialog",

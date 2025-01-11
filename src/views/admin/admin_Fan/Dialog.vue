@@ -28,6 +28,9 @@
         <el-form-item label="粉丝代码">
           <el-input v-model="fanInfo.FanCode"></el-input>
         </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="fanInfo.Password" type="password"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('fanInfo')"
             >确认修改</el-button

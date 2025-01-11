@@ -41,7 +41,7 @@
 
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
+            <el-button v-if="false"
               size="mini"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"

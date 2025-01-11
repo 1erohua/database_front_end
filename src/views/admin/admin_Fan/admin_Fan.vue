@@ -40,6 +40,8 @@
         </el-table-column>
         <el-table-column prop="FanCode" label="粉丝代码" width="150">
         </el-table-column>
+        <el-table-column prop="Password" label="密码" width="150">
+        </el-table-column>
 
         <el-table-column label="操作">
           <template slot-scope="scope">

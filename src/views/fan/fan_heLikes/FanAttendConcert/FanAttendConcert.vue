@@ -31,6 +31,9 @@
         <el-table-column prop="ConcertName" label="演唱会名称" width="150">
         </el-table-column>
         <el-table-column prop="ConcertDate" label="演唱会日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.ConcertDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="Location" label="地点" width="200">
         </el-table-column>
@@ -73,6 +76,7 @@
 import { getFanAttendedConcerts, addAttendedConcert, removeAttendedConcert } from "@/api/request";
 import Pagination from "@/components/pagination";
 import Dialog from "./Dialog.vue";
+import moment from "moment"; // 引入 moment.js
 
 export default {
   name: "FanAttendConcert",
@@ -157,7 +161,9 @@ export default {
     // 新增参加的演唱会
     newAdd(event) {
       this.lostBlur(event);
-      this.concertInfo = {}; // 清空表单
+      this.concertInfo = {
+        ConcertDate: moment().format('YYYY-MM-DD HH:mm:ss') // 设置默认日期
+      }; // 清空表单
       this.dialogEditVisible.value = true;
     },
     // 刷新演唱会表
@@ -181,6 +187,10 @@ export default {
     updateConcert(data) {
       this.getConcertMes();
     },
+    // 格式化日期
+    formatDate(date) {
+      return date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+    }
   },
 };
 </script>

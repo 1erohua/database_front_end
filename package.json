@@ -14,6 +14,7 @@
     "element-ui": "^2.14.1",
     "express": "^4.21.2",
     "js-cookie": "^2.2.1",
+    "moment": "^2.30.1",
     "mysql": "^2.18.1",
     "vue": "^2.6.11",
     "vue-fragment": "^1.5.1",

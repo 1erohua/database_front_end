@@ -13,8 +13,10 @@
         <el-form-item label="成立日期">
           <el-date-picker
             v-model="bandInfo.FormationDate"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="乐队描述">
@@ -38,6 +40,7 @@
 
 <script>
 import { updateBand, addBand } from "@/api/request";
+import moment from "moment";
 
 export default {
   name: "BandDialog",

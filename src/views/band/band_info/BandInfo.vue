@@ -2,7 +2,7 @@
   <div class="band-detail">
     <div class="container_wrap">
       <div class="batchOption">
-        <el-button icon="el-icon-plus" type="success" @click="newAdd($event)"
+        <el-button v-if="false" icon="el-icon-plus" type="success" @click="newAdd($event)"
           >新增乐队</el-button
         >
         <el-button
@@ -76,9 +76,10 @@
 </template>
 
 <script>
-import { getAllBands, deleteBand } from "@/api/request";
+import { getBandInfo, deleteBand } from "@/api/request";
 import Pagination from "@/components/pagination";
 import Dialog from "./Dialog.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "BandDetail",
@@ -87,29 +88,33 @@ export default {
     Dialog,
   },
   created() {
-    // 获取所有乐队信息
+    // 获取当前乐队信息
     this.getBandMes();
   },
   data() {
     return {
       tableData: [],
-      pagiDataAll: 0,
+      pagiDataAll: 1, // 只有一条数据，分页数为1
       dialogEditVisible: { value: false },
       bandInfo: {},
       selectedData: [],
     };
   },
+  computed: {
+    ...mapState({
+      bandId: (state) => state.bandId, // 从 store 中获取当前乐队的 bandId
+    }),
+  },
   methods: {
-    // 获取乐队信息
+    // 获取当前乐队信息
     getBandMes() {
-      getAllBands().then((res) => {
-        this.tableData = res.data;
-        this.pagiDataAll = Math.ceil(res.data.length / 10); // 假设每页显示10条数据
+      getBandInfo(this.bandId).then((res) => {
+        this.tableData = [res.data]; // 将单个乐队信息放入数组中
       });
     },
     // 分页跳转
     currentChange(item) {
-      this.getBandMes(item - 1);
+      // 由于只有一条数据，分页跳转不需要处理
     },
     // 修改乐队信息
     handleEdit(index, row) {

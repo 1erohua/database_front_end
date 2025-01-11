@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { getBandFans, getAlbumFans, getSongFans, getBandConcerts } from "@/api/request";
+import { getBandFans, getAlbumFans, getSongFans, getConcertAttendees } from "@/api/request";
 
 export default {
   name: "FansDetail",
@@ -81,7 +81,9 @@ export default {
       this.bandFans = (await getBandFans(bandId)).data;
       this.albumFans = (await getAlbumFans(bandId)).data;
       this.songFans = (await getSongFans(bandId)).data;
-      this.concertFans = (await getBandConcerts(bandId)).data;
+      let {data} = (await getConcertAttendees(bandId)).data;
+      this.concertFans = data;
+
     },
     refresh() {
       this.getFansData();

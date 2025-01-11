@@ -37,8 +37,14 @@
         <el-table-column prop="Role" label="角色" width="150">
         </el-table-column>
         <el-table-column prop="JoinDate" label="加入日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.JoinDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="LeaveDate" label="离开日期" width="150">
+          <template slot-scope="scope">
+            {{ formatDate(scope.row.LeaveDate) }}
+          </template>
         </el-table-column>
         <el-table-column prop="MemberCode" label="成员代码" width="150">
         </el-table-column>
@@ -83,6 +89,7 @@
 import { getBandMembers, deleteBandMember } from "@/api/request";
 import Pagination from "@/components/pagination";
 import Dialog from "./Dialog.vue";
+import moment from "moment";
 
 export default {
   name: "BandMember",
@@ -118,7 +125,11 @@ export default {
     },
     // 修改乐队成员信息
     handleEdit(index, row) {
-      this.memberInfo = row;
+      this.memberInfo = { 
+        ...row, 
+        JoinDate: moment(row.JoinDate).format('YYYY-MM-DD HH:mm:ss'),
+        LeaveDate: row.LeaveDate ? moment(row.LeaveDate).format('YYYY-MM-DD HH:mm:ss') : null
+      };
       this.dialogEditVisible.value = true;
     },
     // 删除乐队成员信息
@@ -172,7 +183,10 @@ export default {
     // 新增乐队成员
     newAdd(event) {
       this.lostBlur(event);
-      this.memberInfo = {}; // 清空表单
+      this.memberInfo = { 
+        JoinDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        LeaveDate: null
+      }; // 清空表单并设置默认日期
       this.dialogEditVisible.value = true;
     },
     // 刷新乐队成员表
@@ -196,6 +210,10 @@ export default {
     updateMember(data) {
       this.getBandMemberMes();
     },
+    // 格式化日期
+    formatDate(date) {
+      return date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+    }
   },
 };
 </script>

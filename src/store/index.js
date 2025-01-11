@@ -42,7 +42,7 @@ export default new Vuex.Store({
 
 		// 用户职位
 		// 用户职位包括有 Manager、BandMember、Fan三种
-		role: 'BandMember',
+		role:'',
 		// 用户名
 		username: "",
 		// 用户头像
@@ -130,72 +130,93 @@ export default new Vuex.Store({
 			commit
 		}, userPass) {
 			const {
-				username,
-				pass
+				code,
+				password,
+				role
 			} = userPass;
 			return new Promise((resolve, reject) => {
 
-				// 模拟登录成功
-				if(username !== "admin" || pass !== "123456"){
-					// 如果用户名或密码错误，返回错误信息
-					reject(new Error("用户名或密码错误"))
+				// // 模拟登录成功
+				// if(username !== "admin" || password !== "123456"){
+				// 	// 如果用户名或密码错误，返回错误信息
+				// 	reject(new Error("用户名或密码错误"))
 
-				// 登录失败
-				}else{
-					// 模拟设置token
-					setToken("123456")
-					// 返回登录成功的信息
-					resolve({data:{
-						code:1000,
-						message:"登录成功",
-					}})
-				}
+				// // 登录失败
+				// }else{
+				// 	// 模拟设置token
+				// 	setToken("123456")
+				// 	// 返回登录成功的信息
+				// 	resolve({data:{
+				// 		code:1000,
+				// 		message:"登录成功",
+				// 	}})
+				// }
 
 				// 当搭建好后端和MySQL开启以下注释，并将上面模拟登录操作注释
-				// getLogin({ username: username, pass: pass })
-				//   .then((res) => {
-				//     const { data } = res;
-				//     commit("SET_TOKEN", data.token);
-				//     setToken(data.token);
-				//     resolve(res);
-				//   })
-				//   .catch((error) => {
-				//     reject(error);
-				//   });
+				getLogin({ code: code, password: password, role:role })
+				.then((res) => {
+					console.log("此处是表单提交成功后的返回")
+				    const { data } = res;
+				    // commit("SET_TOKEN", data.token);
+				    commit("SET_TOKEN", "1111");
+				    // setToken(data.token);
+					setToken("111111");
+
+					console.log("开始获取信息！！！！")
+				    commit("SET_NAME", data.username);
+				    commit("SET_ROLE", data.role);
+				    commit("SET_BANDID", data.bandId);
+					commit("SET_FANID",data.fanId);
+					commit("SET_AGE",data.age);
+					commit("SET_GENDER",data.gender);
+					commit("SET_BANDMEMBER",data.MemberId);
+
+
+
+				    resolve(res);
+				  })
+				  .catch((error) => {
+				    reject(error);
+				  });
 			});
 		},
 		// 获取用户信息
-		getInfo1({
+		// 1月10日登录连接测试：此处可以废弃，已在getLogin解析成功
+		getInfo({
 			commit,
 			state
 		}) {
 			return new Promise((resolve, reject) => {
-				// 模拟设置用户名
-				commit("SET_NAME", '林华');
-				// 模拟设置用户头像
-				commit("SET_AVATAR", 'https://p1.ssl.qhimg.com/t019a23480c7749785e.jpg');
-				// 模拟设置用户职位
-				// commit("SET_ROLE", 'Manager');
-				// 返回成功信息
-				resolve();
 
-				// // 当搭建好后端和MySQL开启以下注释，并将上面代码注释
-				// getInfo({ token: state.token })
-				//   .then((res) => {
-				//     let { data } = res;
-				//     commit("SET_NAME", data.username);
-				//     commit("SET_AVATAR", data.avatar);
-				//     commit("SET_ROLE", data.role);
-				//     commit("SET_BANDID", data.bandId);
-				// 	commit("SET_FANID",data.fanId);
-				// 	commit("SET_AGE",data.age);
-				// 	commit("SET_GENDER",data.gender);
-				// 	commit("SET_BANDMEMBER",data.MemberId);
-				//     resolve();
-				//   })
-				//   .catch((err) => {
-				//     reject(err);
-				//   });
+				// // 模拟设置用户名
+				// commit("SET_NAME", '林华');
+				// // 模拟设置用户头像
+				commit("SET_AVATAR", 'https://p1.ssl.qhimg.com/t019a23480c7749785e.jpg');
+				// // 模拟设置用户职位
+				// // commit("SET_ROLE", 'Manager');
+				// // 返回成功信息
+				// resolve();
+
+				console.log("此处为测试点1，若无打印则本段无运行")
+				// 当搭建好后端和MySQL开启以下注释，并将上面代码注释
+				getInfo({ token: state.token })
+				  .then((res) => {
+					console.log("此处为测试点2，若无打印则本段无运行")
+				    let { data } = res;
+					console.log("开始获取信息！！！！")
+				    commit("SET_NAME", data.username);
+				    commit("SET_ROLE", data.role);
+				    commit("SET_BANDID", data.bandId);
+					commit("SET_FANID",data.fanId);
+					commit("SET_AGE",data.age);
+					commit("SET_GENDER",data.gender);
+					commit("SET_BANDMEMBER",data.MemberId);
+				    resolve();
+				  })
+				  .catch((err) => {
+					console.log("此处为测试点3，若无打印则本段无运行")
+				    reject(err);
+				});
 			});
 		},
 		// 登出操作
